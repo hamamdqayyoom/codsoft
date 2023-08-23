@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Basic Calculator</title>
+
+
+
+    <style>
+        /* styles.css */
+        /* Reset some default styles */
+        body,h1,h2,h3,p,ul,ol,li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        /* Center the calculator */
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Calculator display */
+        .display {
+            grid-column: 1 / -1;
+            background-color: #f7f7f7;
+            text-align: right;
+            padding: 10px;
+            font-size: 24px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style for number and operator buttons */
+        .btn {
+            padding: 15px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Style for equal button */
+        .equal {
+            background-color: #5cb85c;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .equal:hover {
+            background-color: #449d44;
+        }
+
+        /* Style for clear buttons */
+        .clear {
+            background-color: #d9534f;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .clear:hover {
+            background-color: #c9302c;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="calculator">
+        <div class="display">0</div>
+        <button class="btn">7</button>
+        <button class="btn">8</button>
+        <button class="btn">9</button>
+        <button class="btn operator">+</button>
+        <button class="btn">4</button>
+        <button class="btn">5</button>
+        <button class="btn">6</button>
+        <button class="btn operator">-</button>
+        <button class="btn">1</button>
+        <button class="btn">2</button>
+        <button class="btn">3</button>
+        <button class="btn operator">*</button>
+        <button class="btn">0</button>
+        <button class="btn">.</button>
+        <button class="btn equal">=</button>
+        <button class="btn operator">/</button>
+        <button class="btn">C</button>
+        <button class="btn">AC</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const display = document.querySelector('.display');
+            let currentInput = '0';
+            let previousInput = '';
+            let operator = '';
+
+            function updateDisplay() {
+                // Display the operator along with the current input
+                display.textContent = previousInput + ' ' + operator + ' ' + currentInput;
+            }
+
+
+            function handleNumberClick(number) {
+                if (currentInput === '0') {
+                    currentInput = number;
+                } else {
+                    currentInput += number;
+                }
+                updateDisplay();
+            }
+
+            function handleOperatorClick(newOperator) {
+                if (operator !== '') {
+                    calculate();
+                }
+                operator = newOperator;
+                previousInput = currentInput;
+                currentInput = '0';
+                updateDisplay();
+            }
+
+
+            function calculate() {
+                const num1 = parseFloat(previousInput);
+                const num2 = parseFloat(currentInput);
+                switch (operator) {
+                    case '+':
+                        currentInput = (num1 + num2).toString();
+                        break;
+                    case '-':
+                        currentInput = (num1 - num2).toString();
+                        break;
+                    case '*':
+                        currentInput = (num1 * num2).toString();
+                        break;
+                    case '/':
+                        currentInput = (num1 / num2).toString();
+                        break;
+                }
+                operator = '';
+                previousInput = '';
+                updateDisplay();
+            }
+
+
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const buttonText = button.textContent;
+                    if (!isNaN(buttonText) || buttonText === '.') {
+                        handleNumberClick(buttonText);
+                    } else if (buttonText === '=') {
+                        calculate();
+                    } else if (buttonText === 'C') {
+                        currentInput = currentInput.slice(0, -1);
+                        if (currentInput === '') {
+                            currentInput = '0';
+                        }
+                        updateDisplay();
+                    } else if (buttonText === 'AC') {
+                        currentInput = '0';
+                        previousInput = '';
+                        operator = '';
+                        updateDisplay();
+                    } else {
+                        handleOperatorClick(buttonText);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
